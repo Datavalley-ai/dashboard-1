@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+pnpm-lock.yaml
+
+# Build outputs
+dist/server/
+dist/node-build.mjs
+
+# Development files
+.env
+.env.local
+.env.production
+*.log
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+AGENTS.md
+README.md
+
+# Server files (not needed for SPA)
+server/
+shared/
+
+# Builder files
+.builder/
+exclude.txt
+
+# Docker
+.dockerignore
+Dockerfile
