@@ -343,7 +343,7 @@ export default function Index() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card">
-        <div className="flex h-16 items-center justify-between px-6">
+        <div className="flex h-16 items-center justify-between px-4 md:px-6 max-w-7xl mx-auto">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
@@ -380,9 +380,9 @@ export default function Index() {
       </header>
 
       {/* Main Content */}
-      <main className="p-6 space-y-6">
+      <main className="p-4 md:p-6 space-y-6 max-w-7xl mx-auto">
         {/* Overview Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Students</CardTitle>
@@ -540,6 +540,40 @@ export default function Index() {
                       </div>
                     </div>
 
+                    {/* Achievements Highlight */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {student.cgpa >= 8.5 && (
+                        <Badge className="bg-success/20 text-success border-success/30 font-semibold">
+                          <Trophy className="h-3 w-3 mr-1" />
+                          High Performer
+                        </Badge>
+                      )}
+                      {student.placementStatus === 'placed' && (
+                        <Badge className="bg-primary/20 text-primary border-primary/30 font-semibold">
+                          <Building className="h-3 w-3 mr-1" />
+                          Placed
+                        </Badge>
+                      )}
+                      {student.backlogs === 0 && (
+                        <Badge className="bg-info/20 text-info border-info/30 font-semibold">
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          No Backlogs
+                        </Badge>
+                      )}
+                      {student.overallProgress >= 80 && (
+                        <Badge className="bg-warning/20 text-warning border-warning/30 font-semibold">
+                          <TrendingUp className="h-3 w-3 mr-1" />
+                          Top Skills
+                        </Badge>
+                      )}
+                      {student.projects && student.projects.some(p => p.grade.startsWith('A')) && (
+                        <Badge className="bg-purple-500/20 text-purple-500 border-purple-500/30 font-semibold">
+                          <Award className="h-3 w-3 mr-1" />
+                          A-Grade Projects
+                        </Badge>
+                      )}
+                    </div>
+
                     {/* Academic Overview */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-muted/30 rounded-lg">
                       <div className="text-center">
@@ -590,8 +624,8 @@ export default function Index() {
                       </div>
                     </div>
 
-                    {/* Placement Details */}
-                    <div className="p-4 bg-card border rounded-lg">
+                    {/* Placement Details - Enhanced */}
+                    <div className="p-4 bg-gradient-to-br from-card to-primary/5 border-2 border-primary/20 rounded-lg">
                       <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
                         <Building className="h-4 w-4" />
                         Placement Status & Details
@@ -602,11 +636,11 @@ export default function Index() {
                           <div className="space-y-2">
                             <div className="flex justify-between items-center">
                               <span className="text-xs text-muted-foreground">Status:</span>
-                              <Badge className={
-                                student.placementStatus === 'placed' ? 'bg-success text-success-foreground' :
-                                student.placementStatus === 'searching' ? 'bg-warning text-warning-foreground' :
-                                'bg-destructive text-destructive-foreground'
-                              }>
+                              <Badge className={`font-bold px-3 py-1 ${
+                                student.placementStatus === 'placed' ? 'bg-success/20 text-success border-2 border-success/30' :
+                                student.placementStatus === 'searching' ? 'bg-warning/20 text-warning border-2 border-warning/30' :
+                                'bg-destructive/20 text-destructive border-2 border-destructive/30'
+                              }`}>
                                 {student.placementStatus === 'placed' ? 'Placed' :
                                  student.placementStatus === 'searching' ? 'Actively Searching' : 'Not Started'}
                               </Badge>
@@ -657,11 +691,17 @@ export default function Index() {
                       </div>
                     </div>
 
-                    {/* Technical Skills Progress */}
+                    {/* Technical Skills Progress - Enhanced */}
                     <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm font-medium">Technical Skills Progress</span>
-                        <span className="text-sm font-bold">{student.overallProgress || 0}%</span>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <Code className="h-4 w-4 text-primary" />
+                          <span className="text-sm font-semibold">Technical Skills & Work</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-muted-foreground">Overall:</span>
+                          <span className="text-sm font-bold text-primary">{student.overallProgress || 0}%</span>
+                        </div>
                       </div>
 
                       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -669,47 +709,65 @@ export default function Index() {
                           const Icon = skillIcons[skill as keyof typeof skillIcons];
                           const progressValue = progress || 0;
                           return (
-                            <div key={skill} className="text-center p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
-                              {Icon && <Icon className="h-5 w-5 mx-auto mb-2 text-muted-foreground" />}
-                              <div className="text-xs font-medium truncate mb-1">{skill}</div>
+                            <div key={skill} className="text-center p-3 rounded-lg border-2 bg-gradient-to-br from-card to-muted/20 hover:from-card hover:to-primary/10 transition-all duration-200 group">
+                              {Icon && <Icon className="h-5 w-5 mx-auto mb-2 text-muted-foreground group-hover:text-primary transition-colors" />}
+                              <div className="text-xs font-semibold truncate mb-1 group-hover:text-primary transition-colors">{skill}</div>
                               <div className={`text-sm font-bold ${
                                 progressValue >= 80 ? 'text-success' :
                                 progressValue >= 60 ? 'text-warning' : 'text-destructive'
                               }`}>
                                 {progressValue}%
                               </div>
-                              <Progress value={progressValue} className="h-1 mt-2" />
+                              <Progress 
+                                value={progressValue} 
+                                className={`h-2 mt-2 ${
+                                  progressValue >= 80 ? 'bg-success/20' :
+                                  progressValue >= 60 ? 'bg-warning/20' : 'bg-destructive/20'
+                                }`} 
+                              />
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {progressValue >= 80 ? 'Expert' :
+                                 progressValue >= 60 ? 'Intermediate' : 'Beginner'}
+                              </div>
                             </div>
                           );
                         })}
                       </div>
                     </div>
 
-                    {/* Recent Projects */}
+                    {/* Recent Projects - Enhanced */}
                     <div>
-                      <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
-                        <Award className="h-4 w-4" />
-                        Recent Projects
+                      <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
+                        <Award className="h-4 w-4 text-primary" />
+                        Recent Projects & Work
                       </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {student.projects?.map((project, index) => (
-                          <div key={index} className="p-2 rounded border bg-card">
-                            <div className="flex justify-between items-start">
+                          <div key={index} className="p-3 rounded-lg border-2 bg-gradient-to-br from-card to-muted/30 hover:from-card hover:to-primary/5 transition-all duration-200 group">
+                            <div className="flex justify-between items-start mb-2">
                               <div className="flex-1">
-                                <div className="text-sm font-medium truncate">{project.name}</div>
-                                <div className="text-xs text-muted-foreground">{project.course}</div>
+                                <div className="text-sm font-semibold truncate group-hover:text-primary transition-colors">
+                                  {project.name}
+                                </div>
+                                <div className="text-xs text-muted-foreground mt-1">{project.course}</div>
                               </div>
-                              <Badge variant="outline" className={`text-xs ${
-                                project.grade.startsWith('A') ? 'border-success text-success' :
-                                project.grade.startsWith('B') ? 'border-warning text-warning' :
-                                'border-destructive text-destructive'
+                              <Badge className={`text-xs font-bold px-2 py-1 ${
+                                project.grade.startsWith('A') ? 'bg-success/20 text-success border-success/30' :
+                                project.grade.startsWith('B') ? 'bg-warning/20 text-warning border-warning/30' :
+                                'bg-destructive/20 text-destructive border-destructive/30'
                               }`}>
                                 {project.grade}
                               </Badge>
                             </div>
+                            <div className="flex items-center gap-2 mt-2">
+                              <div className="w-2 h-2 rounded-full bg-primary"></div>
+                              <span className="text-xs text-muted-foreground">Completed Project</span>
+                            </div>
                           </div>
                         )) || (
-                          <div className="text-xs text-muted-foreground col-span-2">No projects available</div>
+                          <div className="text-xs text-muted-foreground col-span-2 text-center py-4 bg-muted/20 rounded-lg">
+                            No projects available
+                          </div>
                         )}
                       </div>
                     </div>
@@ -731,7 +789,7 @@ export default function Index() {
         </Card>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
