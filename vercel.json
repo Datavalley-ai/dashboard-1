@@ -5,9 +5,9 @@
       "destination": "/index.html"
     }
   ],
-  "buildCommand": "pnpm build:client",
+  "buildCommand": "npm run build:client",
   "outputDirectory": "dist/spa",
-  "installCommand": "pnpm install",
+  "installCommand": "npm install",
   "framework": "vite",
   "env": {
     "NODE_ENV": "production"
